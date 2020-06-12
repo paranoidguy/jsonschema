@@ -155,3 +155,9 @@ func InvalidValueString(data interface{}) string {
 	}
 	return string(bt)
 }
+
+type ExtendedResult struct {
+	PropertyPath string
+	Key          string
+	Value        interface{}
+}

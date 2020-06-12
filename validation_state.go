@@ -26,6 +26,7 @@ type ValidationState struct {
 	Misc                        map[string]interface{}
 
 	Errs *[]KeyError
+	ExtendedResults *[]ExtendedResult
 }
 
 // NewValidationState creates a new ValidationState with the provided location pointers and data instance
@@ -45,6 +46,7 @@ func NewValidationState(s *Schema) *ValidationState {
 		LocalEvaluatedPropertyNames: &map[string]bool{},
 		Misc:                        map[string]interface{}{},
 		Errs:                        &[]KeyError{},
+		ExtendedResults:             &[]ExtendedResult{},
 	}
 }
 
@@ -65,6 +67,7 @@ func (vs *ValidationState) NewSubState() *ValidationState {
 		LocalEvaluatedPropertyNames: vs.LocalEvaluatedPropertyNames,
 		Misc:                        map[string]interface{}{},
 		Errs:                        vs.Errs,
+		ExtendedResults:             vs.ExtendedResults,
 	}
 }
 
@@ -148,6 +151,19 @@ func (vs *ValidationState) AddSubErrors(errs ...KeyError) {
 		schemaDebug("[AddSubErrors] Error: %s", err.Message)
 	}
 	*vs.Errs = append(*vs.Errs, errs...)
+}
+
+func (vs *ValidationState) AddExtendedResult(key string, data interface{}) {
+	instancePath := vs.InstanceLocation.String()
+	if len(instancePath) == 0 {
+		instancePath = "/"
+	}
+	schemaDebug("[AddExtendedResult] Keyword: %s, Path: %s", key, instancePath)
+	*vs.ExtendedResults = append(*vs.ExtendedResults, ExtendedResult{
+		PropertyPath: instancePath,
+		Key: key,
+		Value: data,
+	})
 }
 
 // IsValid returns if the current state is valid
