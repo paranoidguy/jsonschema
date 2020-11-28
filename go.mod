@@ -1,4 +1,4 @@
-module github.com/paranoidguy/jsonschema
+module github.com/securitybunker/jsonschema
 
 go 1.13
 
